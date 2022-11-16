@@ -39,13 +39,14 @@ def create_species_table(cur, conn):
 # TASK 1
 # CREATE TABLE FOR PATIENTS IN DATABASE
 def create_patients_table(cur, conn):
-    pass
-
+    cur.execute("drop table if exists Patients")
+    cur.execute("create table Patient[pet_id INTEGER PRIMARY KEY, name TEXT, species_id NUMBER, age INTEGER, cuteness INTEGER, aggressiveness INTEGER]")
+    conn.commit()
 
 # ADD FLUFFLE TO THE TABLE
 def add_fluffle(cur, conn):
-    pass
-    
+    cur.execute("Insert into Patients (pet_id, name, speciees_id, cuteness, agressiveness) values[?,?,?,?,?,?]", (0, "Fluffle", 0,3,90,100))
+    conn.commit()
 
 # TASK 2
 # CODE TO ADD JSON TO THE TABLE
@@ -59,16 +60,24 @@ def add_pets_from_json(filename, cur, conn):
     json_data = json.loads(file_data)
 
     # THE REST IS UP TO YOU
-    pass
+    for dic in json_data:
+        name=dic["name"]
+        species= cur.execute("Select id From Species Where tile= ?", (dic["species"],))
+        species_id=cur.fetchone()[0]
+        age= dic["age"]
+        cuteness=dic["cuteness"]
+        aggresivenss= dic["aggresiveness"]
+    cur.commit()
+
 
 
 # TASK 3
 # CODE TO OUTPUT NON-AGGRESSIVE PETS
 def non_aggressive_pets(aggressiveness, cur, conn):
+    cur.execute("SELECT name FROM Patients WHERE aggressiveness <= ?", (aggressiveness,))
+    lst = cur.fetchall()
     pass
-
-
-
+   
 def main():
     # SETUP DATABASE AND TABLE
     cur, conn = setUpDatabase('animal_hospital.db')
